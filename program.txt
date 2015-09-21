@@ -1,0 +1,74 @@
+# -*- coding:utf-8 -*-
+#!/usr/bin/python
+
+import SocketServer  
+import socket  
+import sys  
+  
+class TCPHandler(SocketServer.BaseRequestHandler):  
+    #リクエストを受け取るたびに呼ばれる関数
+    def handle(self):  
+  
+  
+#環境に応じて変更
+HOST = '192.168.100.101'
+PORT = 3002
+
+SocketServer.TCPServer.allow_reuse_address = True
+server = SocketServer.TCPServer((HOST, PORT), TCPHandler)  
+
+#^Cを押したときにソケットを閉じる
+try:
+    server.serve_forever()  
+except KeyboardInterrupt:
+    pass
+server.shutdown()
+sys.exit()
+
+クライアント側
+# -*- coding:utf-8 -*-
+#!/usr/bin/python
+import socket
+    HOST = "192.168.100.101"
+    PORT = 3001
+    sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    sock.connect((HOST,PORT))
+    sock.send('HELLO\n')
+    sock.close()
+中身はjson
+
+# -*- coding: utf-8 -*-
+
+# ↑utf-8 でコーディングする時に宣言
+
+import urllib
+
+
+def post(url):
+
+  # パラメタのハッシュを作成（pythonでは辞書と呼ぶらしい）
+
+  # ※キーをnameとして、値にvalueとしたいものをセット
+
+  postdata = {}
+
+  postdata['__mk_ja_JP'] = 'カタカナ'
+
+  postdata['initialSearch'] = 1
+
+  postdata['url'] = 'search-alias'
+
+  postdata['field-keywords'] = 'python'
+
+  postdata['Go'] = 'Go'
+
+  
+
+  params = urllib.urlencode(postdata) # URLエンコード
+
+  up = urllib.urlopen(url, params)    # (アクション先, パラメタの辞書)としてリクエストするだけ
+
+  print up.read()                     # オブジェクトに対してread()で、ソースを取得
+
+
+post('http://www.amazon.co.jp/s/')
